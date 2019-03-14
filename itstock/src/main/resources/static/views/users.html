@@ -1,0 +1,14 @@
+<form>
+	<div class="form-group row">
+		<label class="col-sm-2 col-form-label">Asset Type</label>
+		<div class="col-sm-4">
+			<select class="form-control form-control-sm custom-select"
+				ng-model="assetType" ng-options="a.name for a in assetTypeList">
+			</select>
+		</div>
+		<label class="col-sm-2 col-form-label">Asset Identity</label>
+		<div class="col-sm-4">
+			<input type="text" class="form-control" ng-model="assetId" value="eTrans/IT/525/01">
+		</div>
+	</div>
+</form>
