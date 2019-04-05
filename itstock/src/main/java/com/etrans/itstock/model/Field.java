@@ -1,5 +1,8 @@
 package com.etrans.itstock.model;
 
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Document
 public class Field {
 
 	private String name;
@@ -39,11 +42,11 @@ public class Field {
 		this.type = type;
 	}
 
-	public boolean isMandatory() {
+	public boolean getIsMandatory() {
 		return isMandatory;
 	}
 
-	public void setMandatory(boolean isMandatory) {
+	public void setIsMandatory(boolean isMandatory) {
 		this.isMandatory = isMandatory;
 	}
 

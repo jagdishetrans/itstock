@@ -19,7 +19,7 @@ public class AssetTypeService {
 	}
 
 	public Optional<AssetType> getAssetTypeByType(String type) {
-		return assetTypeRepository.findByType(type);
+		return assetTypeRepository.findById(type);
 	}
 
 }

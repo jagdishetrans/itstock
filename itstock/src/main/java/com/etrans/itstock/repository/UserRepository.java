@@ -10,6 +10,6 @@ import com.etrans.itstock.model.User;
 @Repository
 public interface UserRepository extends CrudRepository<User, Long> {
 
-	Optional<User> getUserByUserNameAndPassword(String userName, String password);
+	Optional<User> findByUserNameAndPassword(String userName, String password);
 
 }

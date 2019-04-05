@@ -14,7 +14,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.etrans.itstock.model.AssetType;
 import com.etrans.itstock.service.AssetTypeService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 
 @RestController
 public class AssetTypeController {
@@ -24,9 +23,7 @@ public class AssetTypeController {
 
 	@PostMapping(path = "/assettype")
 	@ResponseStatus(value = HttpStatus.CREATED)
-	public void postAssetTypeData(@RequestBody AssetType assetType) throws JsonProcessingException {
-		// ObjectMapper mapper = new ObjectMapper();
-		// System.out.println(mapper.writeValueAsString(assetType));
+	public void postAssetTypeData(@RequestBody AssetType assetType) {
 		assetTypeService.saveData(assetType);
 	}
 

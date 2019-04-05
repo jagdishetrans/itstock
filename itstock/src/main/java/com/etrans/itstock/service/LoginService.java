@@ -15,7 +15,19 @@ public class LoginService {
 	UserRepository userRepository;
 
 	public Optional<User> getUser(String userName, String password) {
-		return userRepository.getUserByUserNameAndPassword(userName, password);
+		return userRepository.findByUserNameAndPassword(userName, password);
+	}
+
+	public boolean saveUser(User user) {
+		if (user == null)
+			return false;
+
+		if (user.getUserName().trim().isEmpty() || user.getPassword().trim().isEmpty()
+				|| user.getProfileName().trim().isEmpty())
+			return false;
+
+		userRepository.save(user);
+		return true;
 	}
 
 //	public Optional<User> checkUser(Long id) {
