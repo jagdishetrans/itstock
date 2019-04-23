@@ -1,49 +1,133 @@
-app.controller('assetController', function($scope, http){
-	
-	$scope.assetTypeList = [
-		"RAM",
-		"MONITOR",
-		"HARD DISK",
-		"PROCESSOR",
-		"KEYBOARD",
-		"FieldTest"
-	];
-	
+app.controller('assetController', function($scope, http, util) {
+
 	$scope.type = {};
-	$scope.dummy = [];
+	$scope.loading = false;
+	$scope.parentAsset = { "tag" : "Select" };
+
 	
-	$scope.save = function(){
+	
+	$scope.include = 'VIEW';
+	
+	getAllAssetType();
+
+	function getAllAssetType() {
+		http.getAllAssetType(function(response) {
+			$scope.assetTypeList = response.data;
+		});
+	}
+
+	$scope.getAssets = function() {
+		if ($scope.assets === undefined || $scope.assets.length === 0) {
+			http.getAssetsForChild(function(response) {
+				$scope.assets = response.data;
+			});
+		}
+	};
+
+	$scope.edit = function(index){
+		$scope.include = 'FORM';
+		http.getAssetsByType($scope.assets[index].type ,function(response){
+			console.log(response);
+			$scope.assets = response.data;
+		});
+	}
+	
+	$scope.add = function(index){
+		$scope.include = 'FORM';
+	}
+	
+	$scope.save = function() {
+		$scope.loading = true;
 		console.log($scope.type.data);
 		let saveObject = {};
 		saveObject["type"] = $scope.type.data.type;
 		saveObject["category"] = $scope.type.data.category;
+		saveObject["tag"] = $scope.type.data.tag;
 		saveObject["fields"] = [];
+		saveObject["child"] = [];
+		saveObject["parent"] = null;
 		
-		for(let index in $scope.type.data.fields){
+		for ( let index in $scope.type.data.fields) {
 			let object = $scope.type.data.fields[index];
 			let fieldObject = {};
 			fieldObject["name"] = object.name;
 			fieldObject["value"] = object.value;
+			fieldObject["isMandatory"] = object.isMandatory;
 			saveObject.fields.push(fieldObject);
+		}
+
+		if($scope.childAssetSelectShow){
+			for(let index in $scope.assets){
+				let asset = $scope.assets[index];
+				if(asset.checked){
+					saveObject.child.push(asset.id);
+				}
+			}
+		}
+		
+		if($scope.parentAssetSelectShow){
+			if($scope.parentAsset.tag !== "Select"){
+				saveObject["parent"] = $scope.parentAsset.id;
+			}
 		}
 		
 		console.log(saveObject);
+		http.saveAsset(saveObject, function(response) {
+			console.log(response);
+			if (response.state === 201) {
+				for ( let index in $scope.type.data.fields) {
+					let object = $scope.type.data.fields[index].value = null;
+				}
+			}
+			$scope.loading = false;
+		});
+	}
+
+	$scope.assetTypeData = [];
+
+	$scope.selectedAssetType = function(index){
+		$scope.include = 'VIEW';
+		var assetType = $scope.assetTypeList[index];
+		http.getAssetsByType(assetType.type ,function(response){
+			console.log(response);
+			$scope.assets = response.data;
+		});
+	};
+	
+//	$scope.selectedAssetType = function(index) {
+//		var assetType = $scope.assetTypeList[index];
+//		$scope.type.data = assetType;
+//		
+//		http.getAssetTypeCount(assetType.type, function(response){
+//			generateId(response.data);
+//		});
+//	};
+
+	$scope.selectParentAsset = function(index){
+		if(index == -1){
+			$scope.parentAsset = { "tag" : "Select" };
+		}else{
+			$scope.parentAsset = $scope.assets[index];
+		}
+	};
+	
+	$scope.showAssetDetails = function(index){
+		if(index == -1){
+			$scope.showAsset = $scope.parentAsset;
+		}else{
+			$scope.showAsset = $scope.assets[index];
+		}
+		$("#assetModal").modal('show');
+	};
+	
+	$scope.removeChildAssetSelection = function(index){
+		$scope.assets[index].checked = false;
 	}
 	
-	$scope.assetTypeData = [
-		{"type":"RAM","category":"0","fields":[{"name":"SL No","type":{"name":"Numeric"},"isMandatory":true,},{"name":"Purchase Date","type":{"name":"DateTime","type":"date"},"isMandatory":true,},{"name":"Model","type":{"name":"Text"},"isMandatory":true,},{"name":"PR No","type":{"name":"Text"},},{"name":"Users","type":{"name":"Dropdown","type":"C","value":["Sachin","Sourav","Rahul","Dhoni","Kohli","Sehwag"]},"isMandatory":true,}]},
-		{"type":"FieldTest","category":"0","fields":[{"name":"Dropdown field","type":{"name":"Dropdown","type":"C","value":["DD1","DD2","DD3","DD4"]},"isMandatory":true,"$$hashKey":"object:51"},{"name":"Checklist field","type":{"name":"Checklist","type":"C","value":["CC1","CC2","CC3"]},"isMandatory":true,"$$hashKey":"object:58"},{"name":"Option field","type":{"name":"Option","type":"C","value":["OP1","OP2","OP3","OP4"]},"isMandatory":true,"$$hashKey":"object:66"},{"name":"Text field","type":{"name":"Text"},"isMandatory":true,"$$hashKey":"object:69"},{"name":"Numeric field","type":{"name":"Numeric"},"isMandatory":true,"$$hashKey":"object:72"},{"name":"Datetime field","type":{"name":"DateTime","type":"date"},"isMandatory":true,"$$hashKey":"object:75"}]}
-	];
-	
-	$scope.selectedAssetType = function(index){
-		var assetType = $scope.assetTypeList[index];
-		for(let i = 0; i < $scope.assetTypeData.length; i++){
-			if(assetType === $scope.assetTypeData[i].type){
-				$scope.type.data = $scope.assetTypeData[i];
-				return;
-			}
-		}
-		$scope.type.data = {};
-	};
+	function generateId(max) {
+		max = util.padLeft(max+1, '0', 4);
+		$scope.type.data.tag = `eTrans/IT/${$scope.type.data.type}/${max}`;
+	}
+
 	
 });

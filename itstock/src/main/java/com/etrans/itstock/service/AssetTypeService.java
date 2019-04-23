@@ -1,5 +1,6 @@
 package com.etrans.itstock.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,10 @@ public class AssetTypeService {
 
 	public Optional<AssetType> getAssetTypeByType(String type) {
 		return assetTypeRepository.findById(type);
+	}
+
+	public List<AssetType> getAllAssetType() {
+		return assetTypeRepository.findAll();
 	}
 
 }

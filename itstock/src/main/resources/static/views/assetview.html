@@ -1,0 +1,30 @@
+<div id="accordion">
+	<div class="card" id="acc{{$index}}" ng-repeat="asset in assets">
+		<div class="card-header" data-toggle="collapse"
+					data-target="#collapse{{$index}}">
+			<span class="mb-0 float-left">
+				{{asset.tag}}
+			</span>
+				<div class="btn-group float-right" role="group" aria-label="Basic example">
+				  <button type="button" class="btn btn-link"><i class="fa fa-eye"></i></button>
+				  <button type="button" class="btn btn-link" ng-click="edit($index)"><i class="fa fa-pencil-square-o"></i></button>
+				  <button type="button" class="btn btn-link" ng-click=""><i class="fa fa-download"></i></button>
+				</div>
+		</div>
+
+		<div id="collapse{{$index}}" class="collapse" data-parent="#acc{{$index}}">
+			<div class="card-body">
+				<div class="row">
+					<div class="col-sm-6" ng-repeat="field in asset.fields">
+						<div class="row">
+							<div class="col-sm-6"><label>{{ field.name }}</label></div>
+							<div class="col-sm-6">{{field.value}}</div>
+						</div>
+					</div>
+				</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+

@@ -1,9 +1,10 @@
 <div class="row">
 	<div class="col-sm-3">
 		<ul class="list-group">
-		  <li class="list-group-item" ng-repeat="asset in assetList" ng-click="selectAsset($index)">{{asset}}</li>
+		  <li class="list-group-item" ng-repeat="asset in assetList" ng-click="selectAsset($index)">{{asset.type}}</li>
 		</ul>	</div>
 	<div class="col-sm-9">
-		<div ng-include="'typecreate.html'"></div>
+		<div ng-include="'../views/typecreate.html'"></div>
+		
 	</div>
 </div>

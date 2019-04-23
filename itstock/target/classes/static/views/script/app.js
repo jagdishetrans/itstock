@@ -13,6 +13,25 @@ app.config(function($routeProvider) {
 		controller : "typeController"
 	});
 });
+app.service('util', function(){
+	this.padLeft = function(num, rep, len){
+		if(rep === undefined){
+			rep = '0';
+		}
+		
+		if(len === undefined){
+			len = 2;
+		}
+		num = num + '';
+		
+		var repCount = len - num.length;
+		var repValue = '';
+		for(var i = 0; i < repCount; i++){
+			repValue += rep;
+		}
+		return repValue + num;
+	}
+});
 app.service('http', function($http) {
 	// http call method
 	function request(rUrl, methodname, parameters, data, callback) {
@@ -40,10 +59,40 @@ app.service('http', function($http) {
 		});
 	};
 	
+	this.getAssetsByType = function(name, callback){
+		request(`/assets/${name}`, METHOD.GET, null, null, function(response){
+			callback(response);
+		});
+	};
+	
+	this.getAssetsForChild = function(callback){
+		request("/assets", METHOD.GET, {parent:false}, null, function(response){
+			callback(response);
+		});
+	}
+	
 	this.deleteAsset = function(name, callback){
 		request(`/assets/${name}`, METHOD.DELETE, null, null, function(response){
 			callback(response);
 		});
-	}
+	};
+	
+	this.getAssetTypeCount = function(type, callback){
+		request(`/assets/${type}/count`, METHOD.GET, null, null, function(response){
+			callback(response);
+		});
+	};
+	
+	this.saveAssetType = function(type, callback){
+		request("/assettype", METHOD.POST, null, type, function(response){
+			callback(response);
+		});
+	};
+	
+	this.getAllAssetType = function(callback){
+		request("/assettype", METHOD.GET, null, null, function(response){
+			callback(response);
+		});
+	};
 	
 });

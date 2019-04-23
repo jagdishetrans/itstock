@@ -1,17 +1,19 @@
 app.controller('typeController', function($scope, http) {
 
-	$scope.assetList = [
+	/*$scope.assetList = [
 		"RAM",
 		"MONITOR",
 		"HARD DISK",
 		"PROCESSOR",
 		"KEYBOARD"
-	];
+	];*/
 	
 	$scope.fields = [];
 	$scope.asset = {};
 	$scope.field = {};
 	$scope.ddType = {};
+	
+	$scope.loading = false;
 
 	$scope.addCustomDDValues = function(){
 		var value = $scope.ddType.customDDValue;
@@ -34,8 +36,29 @@ app.controller('typeController', function($scope, http) {
 		$scope.field = {};
 	};
 	
+	getAllAssetType();
+	
+	function getAllAssetType(){
+		http.getAllAssetType(function(response){
+			$scope.assetList = response.data;
+		});
+	}
+	
+	
 	$scope.save = function(){
 		$scope.asset.fields = $scope.fields;
+		$scope.loading = true;
+		http.saveAssetType($scope.asset, function(response){
+			console.log(response);
+			if(response.status === 201){
+				$scope.fields = [];
+				$scope.asset = {};
+				$scope.field = {};
+				$scope.ddType = {};
+				getAllAssetType();
+			}
+			$scope.loading = false;
+		});
 		console.log($scope.asset);
 	};
 });

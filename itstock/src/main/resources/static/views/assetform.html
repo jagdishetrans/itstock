@@ -1,0 +1,168 @@
+<form>
+	<div class="row">
+		<div class="col-sm-6">
+			<h3>{{ type.data.type }}</h3>
+		</div>
+		<div class="col-sm-3">
+			<input type="text" class="form-control" ng-model="type.data.tag">
+		</div>
+		<div class="col-sm-3">
+			<button type="button" ng-click="save()" style="border-radius: 0px;"
+				class="btn btn-outline-success btn-block">
+				<span ng-hide="loading"><i class="fa fa-save"></i>&nbsp;&nbsp;SAVE</span>
+				<span ng-show="loading"><span
+					class="spinner-grow spinner-grow-lg" role="status"
+					aria-hidden="true"></span> Saving... </span>
+			</button>
+		</div>
+	</div>
+	<div
+		style="height: 80vh; width: 100%; overflow-y: auto; overflow-x: hidden;">
+
+		<div class="form-group row" ng-repeat="field in type.data.fields">
+			<label class="col-sm-2 col-form-label">{{ field.name }}</label>
+			<div class="col-sm-10" ng-switch="field.type.name">
+				<input ng-switch-when="Text" ng-model="field.value" type="text"
+					class="form-control form-control-sm" /> <input
+					ng-switch-when="Numeric" ng-model="field.value" type="number"
+					class="form-control form-control-sm" /> <input
+					ng-switch-when="DateTime" ng-if="field.type.type === 'datetime'"
+					ng-model="field.value" type="datetime"
+					class="form-control form-control-sm" /> <input
+					ng-switch-when="DateTime" ng-if="field.type.type === 'date'"
+					ng-model="field.value" type="date"
+					class="form-control form-control-sm" /> <input
+					ng-switch-when="DateTime" ng-if="field.type.type === 'time'"
+					ng-model="field.value" type="time"
+					class="form-control form-control-sm" />
+
+				<div class="form-check form-check-inline" ng-switch-when="Option"
+					ng-repeat="item in field.type.value">
+					<input class="form-check-input" ng-model=field.value id="{{item}}"
+						type="radio" name="rad" value="{{item}}"> <label
+						class="form-check-label" for={{item}}> {{item}} </label>
+				</div>
+
+				<div class="form-check form-check-inline" ng-switch-when="Checklist"
+					ng-repeat="item in field.type.value">
+					<input class="form-check-input" id="{{item}}" type="checkbox"
+						value="{{item}}"> <label class="form-check-label"
+						for={{item}}> {{item}} </label>
+				</div>
+
+				<select ng-switch-when="Dropdown" ng-if="field.type.type==='C'"
+					ng-model="field.value" class="custom-select custom-select-sm">
+					<option selected disabled>Select {{ field.name }}</option>
+					<option ng-repeat="item in field.type.value">{{item}}</option>
+				</select> <select ng-switch-when="Dropdown" ng-if="field.type.type==='E'"
+					ng-model="field.value" class="custom-select custom-select-sm">
+				</select>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-sm-2">
+				<div class="custom-control custom-switch">
+					<input type="checkbox" class="custom-control-input"
+						ng-click="getAssets()" ng-model="childAssetSelectShow"
+						id="addChildAssetSwitch"> <label
+						class="custom-control-label" for="addChildAssetSwitch">Add
+						Child Assets</label>
+				</div>
+			</div>
+			<div class="col-sm-4">
+				<div ng-show="childAssetSelectShow" class="button-group">
+					<button type="button"
+						class="btn btn-outline-primary btn-sm dropdown-toggle"
+						data-toggle="dropdown">
+						Select<span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu">
+						<li ng-repeat="asset in assets"><label><input
+								ng-model="asset.checked" type="checkbox" />&nbsp;{{ asset.tag }}</label></li>
+					</ul>
+				</div>
+			</div>
+			<div class="col-sm-2">
+				<div class="custom-control custom-switch">
+					<input type="checkbox" class="custom-control-input"
+						ng-click="getAssets()" ng-model="parentAssetSelectShow"
+						id="addParentAssetSwitch"> <label
+						class="custom-control-label" for="addParentAssetSwitch">Add
+						Parent Asset</label>
+				</div>
+			</div>
+			<div class="col-sm-4">
+				<div ng-show="parentAssetSelectShow" class="btn-group">
+					<button type="button"
+						class="btn btn-outline-primary dropdown-toggle btn-sm"
+						style="border-top-right-radius: 0px; border-bottom-right-radius: 0px;"
+						data-toggle="dropdown">{{ parentAsset.tag }}</button>
+					<button type="button" ng-click="showAssetDetails(-1)"
+						class="btn btn-outline-primary btn-sm dropdown-toggle-split"
+						style="border-top-right-radius: 4px; border-bottom-right-radius: 4px;">
+						<span class="fa fa-eye"></span>
+					</button>
+					<ul class="dropdown-menu">
+						<li ng-click="selectParentAsset(-1)"><label>Select</label></li>
+						<li ng-repeat="asset in assets"
+							ng-click="selectParentAsset($index)"><label>{{
+								asset.tag }}</label></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-12">
+				<table class="table table-sm table-bordered">
+					<thead class="thead-dark">
+						<tr>
+							<td>Type</td>
+							<td>Tag</td>
+							<td></td>
+							<td></td>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="asset in assets" ng-if="asset.checked">
+							<td>{{ asset.type }}</td>
+							<td>{{ asset.tag }}</td>
+							<td><button class="btn btn-info btn-sm"
+									ng-click="showAssetDetails($index)">
+									<i class="fa fa-eye"></i>
+								</button></td>
+							<td><button class="btn btn-danger btn-sm"
+									ng-click="removeChildAssetSelection($index)">
+									<i class="fa fa-trash"></i>
+								</button></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</form>
+
+<div id="assetModal" class="modal" tabindex="-1" role="dialog">
+	<div class="modal-dialog modal-dialog-scrollable" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">{{ showAsset.type }} -
+					{{showAsset.tag}}</h5>
+				<button type="button" class="close" data-dismiss="modal"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<ul class="list-group">
+					<li class="list-group-item" ng-repeat="field in showAsset.fields">
+						{{field.name }} : {{field.value}}</li>
+				</ul>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary">OK</button>
+			</div>
+		</div>
+	</div>
+</div>

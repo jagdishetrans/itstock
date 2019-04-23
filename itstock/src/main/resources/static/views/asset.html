@@ -1,109 +1,16 @@
 <div class="row">
 	<div class="col-sm-3">
 		<ul class="list-group">
-			<li class="list-group-item" data-toggle="tab"
+			<li class="list-group-item  d-flex justify-content-between align-items-center" data-toggle="tab"
 				ng-repeat="asset in assetTypeList"
-				ng-click="selectedAssetType($index)">{{asset}}</li>
+				ng-click="selectedAssetType($index)">{{asset.type}}
+				<span class="badge badge-primary badge-pill">14</span>
+				<button class="btn btn-sm btn-link" ng-click="add($index)"><i class="fa fa-plus"></i></button>
+			</li>
 		</ul>
 	</div>
 	<div class="col-sm-9">
-		<form>
-			<div class="row">
-				<div class="col-sm-6">
-					<h3>{{ type.data.type }}</h3>
-				</div>
-				<div class="col-sm-3">
-					<input type="text" class="form-control" ng-model="field.id" >
-				</div>
-				<div class="col-sm-3">
-					<button type="button" ng-click="save()" style="border-radius: 0px;"
-						class="btn btn-outline-success btn-block">
-						<i class="fa fa-save"></i>&nbsp;&nbsp;SAVE
-						<!-- <span class="spinner-grow spinner-grow-lg" role="status" aria-hidden="true"></span>
-  				Saving... -->
-					</button>
-				</div>
-			</div>
-			<div
-				style="height: 80vh; width: 100%; overflow-y: auto; overflow-x: hidden;">
-
-				<div class="form-group row" ng-repeat="field in type.data.fields">
-					<label class="col-sm-2 col-form-label">{{ field.name }}</label>
-					<div class="col-sm-10" ng-switch="field.type.name">
-						<input ng-switch-when="Text" ng-model="field.value" type="text"
-							class="form-control form-control-sm" /> <input
-							ng-switch-when="Numeric" ng-model="field.value" type="number"
-							class="form-control form-control-sm" /> <input
-							ng-switch-when="DateTime" ng-if="field.type.type === 'datetime'"
-							ng-model="field.value" type="datetime"
-							class="form-control form-control-sm" /> <input
-							ng-switch-when="DateTime" ng-if="field.type.type === 'date'"
-							ng-model="field.value" type="date"
-							class="form-control form-control-sm" /> <input
-							ng-switch-when="DateTime" ng-if="field.type.type === 'time'"
-							ng-model="field.value" type="time"
-							class="form-control form-control-sm" />
-
-						<div class="form-check form-check-inline" ng-switch-when="Option"
-							ng-repeat="item in field.type.value">
-							<input class="form-check-input" ng-model=field.value
-								id="{{item}}" type="radio" name="rad" value="{{item}}">
-							<label class="form-check-label" for={{item}}> {{item}} </label>
-						</div>
-
-						<div class="form-check form-check-inline" ng-switch-when="Checklist"
-							ng-repeat="item in field.type.value">
-							<input class="form-check-input" id="{{item}}" type="checkbox"
-								value="{{item}}"> <label class="form-check-label"
-								for={{item}}> {{item}} </label>
-						</div>
-
-						<select ng-switch-when="Dropdown" ng-if="field.type.type==='C'"
-							ng-model="field.value" class="custom-select custom-select-sm">
-							<option selected disabled>Select {{ field.name }}</option>
-							<option ng-repeat="item in field.type.value">{{item}}</option>
-						</select> <select ng-switch-when="Dropdown" ng-if="field.type.type==='E'"
-							ng-model="field.value" class="custom-select custom-select-sm">
-						</select>
-					</div>
-				</div>
-
-				<div class="row">
-					<div class="col-sm-6"></div>
-					<div class="col-sm-3"><button class="btn btn-outline-primary" data-toggle="modal" data-target="#assetModal">Add Asset</button></div>
-					<div class="col-sm-3"><button class="btn btn-outline-primary" data-toggle="modal" data-target="#assetModal">Add To Other Asset</button></div>
-				</div>
-				<!-- <div class="form-group row">
-					<label class="col-sm-2 col-form-label">Add Asset</label>
-					<div class="col-sm-10">
-						
-					</div>
-				</div>
-				<div class="form-group row">
-					<label class="col-sm-2 col-form-label">Add To</label>
-					<div class="col-sm-10">
-						
-					</div>
-				</div> -->
-			</div>
-		</form>
+		<div ng-if="include == 'FORM'" ng-include="'../views/assetform.html'"></div>
+		<div ng-if="include == 'VIEW'" ng-include="'../views/assetview.html'"></div>
 	</div>
-</div>
-<div id="assetModal" class="modal" tabindex="-1" role="dialog">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">{{  }}</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary">OK</button>
-      </div>
-    </div>
-  </div>
 </div>

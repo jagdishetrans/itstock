@@ -15,11 +15,22 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 public class Asset {
 
 	@Id
-	private int id;
+	private Integer id;
 	private String type;
-	private int category;
+	private String tag;
+	private Integer category;
 
 	private List<Field> fields;
+	private Integer parent;
+	private List<Integer> child;
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
 	public String getType() {
 		return type;
@@ -29,11 +40,19 @@ public class Asset {
 		this.type = type;
 	}
 
-	public int getCategory() {
+	public String getTag() {
+		return tag;
+	}
+
+	public void setTag(String tag) {
+		this.tag = tag;
+	}
+
+	public Integer getCategory() {
 		return category;
 	}
 
-	public void setCategory(int category) {
+	public void setCategory(Integer category) {
 		this.category = category;
 	}
 
@@ -43,6 +62,22 @@ public class Asset {
 
 	public void setFields(List<Field> fields) {
 		this.fields = fields;
+	}
+
+	public Integer getParent() {
+		return parent;
+	}
+
+	public void setParent(Integer parent) {
+		this.parent = parent;
+	}
+
+	public List<Integer> getChild() {
+		return child;
+	}
+
+	public void setChild(List<Integer> child) {
+		this.child = child;
 	}
 
 }

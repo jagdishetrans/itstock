@@ -1,5 +1,6 @@
 package com.etrans.itstock.controller;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,11 @@ public class AssetTypeController {
 			return assetType.get();
 		else
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, type + " not found");
+	}
+
+	@GetMapping(path = "/assettype")
+	public List<AssetType> getAssetType() {
+		return assetTypeService.getAllAssetType();
 	}
 
 }
