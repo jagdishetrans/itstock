@@ -1,0 +1,78 @@
+<div layout="column">
+	<md-content>
+    <md-tabs md-dynamic-height md-right-tabs>
+      <md-tab label="ADD">
+        <md-content class="md-padding" layout="column">
+        <md-input-container >
+            <label>Field Name</label>
+            <input ng-model="field.name">
+          </md-input-container>
+
+          <md-input-container >
+            <label>Field Type</label>
+            <md-select ng-model="field.type">
+              <md-option ng-repeat="type in fieldType" value="{{type.value}}">
+                {{type.name}}
+              </md-option>
+            </md-select>
+          </md-input-container>
+          <md-input-container class="md-block" flex-gt-xs ng-hide="field.type === 'number' || field.type === 'switch' || field.type === '' || field.type === undefined || field.type === null">
+	          <label>Select</label>
+	          <md-select ng-model="field.subType">
+		          <md-option ng-repeat="subtype in fieldSubType[field.type]" value="{{subtype.value}}">
+		          	{{subtype.name}}
+		          </md-option>
+	          </md-select>
+          </md-input-container>
+           <md-input-container ng-if="field.type === 'number'" class="md-block" flex-gt-xs>
+			<label>Decimal places</label>
+			<input type="number" ng-model="field.decimalPlaces" />
+          </md-input-container>
+	    	<md-chips ng-if="field.type === 'select'" class="md-block" flex-gt-xs ng-model="listOptions" readonly="false" md-removable="true" placeholder="Enter select options..." >
+	    	</md-chips>
+	    	
+          <div layout="column" layout-align="right"><div><md-button ng-click="submit()" class="md-raised md-primary" ><i class="fas fa-plus"></i> Add</md-button></div></div>
+  	
+        </md-content>
+      </md-tab>
+      <md-tab label="VIEW" ng-click="view()">
+        <md-content class="md-padding" layout="column">
+         	<md-input-container md-no-float class="md-block">
+	    		<md-icon class="fas fa-search"></md-icon>
+	    		<input  type="text" placeholder="Search...">
+  			</md-input-container>
+  	
+			 <md-table-container>
+			  <table md-table md-progress="promise">
+			    <thead md-head>
+			      <tr md-row>
+			        <th md-column ><span>Name</span></th>
+			        <th md-column ><span>Type</span></th>
+			        <th md-column ><span>SubType</span></th>
+			        <th md-column ><span>Values</span></th>
+			        <th md-column ><span>Edit</span></th>
+			      </tr>
+			    </thead>
+			    <tbody md-body>
+			      <tr md-row ng-repeat="field in fields">
+			        <td md-cell>{{field.name}}</td>
+			        <td md-cell>{{field.type}}</td>
+			        <td md-cell>{{field.subType}}</td>
+			        <td md-cell>{{field.options}}</td>
+			        <td md-cell>
+			        	<md-button class="md-icon-button" ng-click="edit(field)" aria-label="More">
+			        		<i class="fas fa-edit"></i>
+			      		</md-button>
+			      	</td>
+			      </tr>
+			    </tbody>
+			  </table>
+			</md-table-container>
+        </md-content>
+      </md-tab>
+    </md-tabs>
+  </md-content>
+          
+  	
+  	
+</div>

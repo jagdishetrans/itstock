@@ -26,14 +26,45 @@ app.controller('assetController', function($scope, http, util) {
 
 	$scope.edit = function(index){
 		$scope.include = 'FORM';
-		http.getAssetsByType($scope.assets[index].type ,function(response){
-			console.log(response);
-			$scope.assets = response.data;
-		});
+		let asset = $scope.assets[index];
+		console.log(asset);
+		for(let i in $scope.assetTypeList){
+			if($scope.assetTypeList[i].type === asset.type){
+				var assetType = $scope.assetTypeList[i];
+				assetType.tag = asset.tag;
+				for(let x in asset.fields){
+					if(assetType.fields[x].name === asset.fields[x].name){
+						assetType.fields[x].value = asset.fields[x].value;
+					}else{
+						for(let n in assetType.fields){
+							if(assetType.fields[n].name === asset.fields[x].name){
+								assetType.fields[n].value = asset.fields[x].value;
+								break;
+							}
+						}
+					}
+				}
+				$scope.type.data = assetType;
+				console.log(assetType);
+				
+				
+				
+				break;
+			}
+		}
 	}
 	
-	$scope.add = function(index){
+	$scope.add = function(index, event){
+		event.stopPropagation();
 		$scope.include = 'FORM';
+		
+		var assetType = $scope.assetTypeList[index];
+		$scope.type.data = assetType;
+		
+		http.getAssetTypeCount(assetType.type, function(response){
+			generateId(response.data);
+		});
+		
 	}
 	
 	$scope.save = function() {
@@ -52,7 +83,6 @@ app.controller('assetController', function($scope, http, util) {
 			let fieldObject = {};
 			fieldObject["name"] = object.name;
 			fieldObject["value"] = object.value;
-			fieldObject["isMandatory"] = object.isMandatory;
 			saveObject.fields.push(fieldObject);
 		}
 
@@ -89,8 +119,9 @@ app.controller('assetController', function($scope, http, util) {
 		$scope.include = 'VIEW';
 		var assetType = $scope.assetTypeList[index];
 		http.getAssetsByType(assetType.type ,function(response){
-			console.log(response);
+			//console.log(response.data);
 			$scope.assets = response.data;
+			//$scope.type.data = response.data;
 		});
 	};
 	

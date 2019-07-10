@@ -10,6 +10,8 @@ import com.etrans.itstock.model.AssetType;
 @Repository
 public interface AssetTypeRepository extends MongoRepository<AssetType, String> {
 
-	Optional<AssetType> findByType(String type);
+	// Optional<AssetType> findByType(String type);
+
+	Optional<AssetType> findByName(String name);
 
 }

@@ -3,80 +3,86 @@
 <title>eTrans</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- <link rel="stylesheet" href="css/font-awesome.min.css" > -->
 <link rel="stylesheet"
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
+	href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
+	integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/"
+	crossorigin="anonymous">
 <link rel="stylesheet"
-	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+href="https://cdnjs.cloudflare.com/ajax/libs/angular-material-data-table/0.10.10/md-data-table.min.css">
+<!-- <link href="css/angular-material.min.css" />
+<link href="css/docs.css" /> -->
 
+<link rel="stylesheet" href="../views/css/angular-material.min.css">
 <style>
-html,body {
-		  height: 100%;
-		}
-.list-group-item{
-		padding:.25rem 1rem;
-	}
-#accordion .card .card-header{
-	padding:5px 10px;
-}
-
-#accordion .card{
-	border-radius:0px;
-} 
-#accordion .card:first-child{
-	border-top-left-radius : .25rem;
-	border-top-right-radius : .25rem;
-	border-bottom:0px;
-}
-#accordion .card:last-child{
-	border-bottom-left-radius : .25rem;
-	border-bottom-right-radius : .25rem;
-}
+/* md-input-container{
+	margin:0px;
+	margin-top:10px;
+} */
 </style>
+<script src="../views/script/lib/angular.min.js"></script>
+<script src="../views/script/lib/angular-route.min.js"></script>
+<script src="../views/script/lib/angular-messages.min.js"></script>
+<script src="../views/script/lib/angular-animate.min.js"></script>
+<script src="../views/script/lib/angular-aria.min.js"></script>
+<script src="../views/script/lib/angular-material.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-material-data-table/0.10.10/md-data-table.min.js"></script>
 
-<script
-	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
-<script
-	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-route.js"></script>
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script
-	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
-<script
-	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"></script>
 <script src="../views/script/app.js"></script>
-<script src="../views/script/typeController.js"></script>
-<script src="../views/script/assetController.js"></script>
-<script>
-/* $(document).ready(function(){
-	$(".list-group-item").on('click', function(){
-		$(".list-group-item").removeClass("active");
-		$(this).addClass('active');
-		console.log('click');
-	});
-}); */
-</script>
+<script src="../views/script/controller/fieldController.js"></script>
 </head>
 <body ng-app="stockApp">
-	<div class="continer-fluid">
-		
-		<ul class="nav nav-tabs nav-justified">
-			<li class="nav-item"><a class="nav-link active"
-				data-target="#dashboard" data-toggle="tab" href="#!/">Dashboard</a></li>
-			<li class="nav-item"><a class="nav-link" data-target="#asset"
-				data-toggle="tab" href="#!asset">Assets</a></li>
-			<li class="nav-item"><a class="nav-link" data-target="#user"
-				data-toggle="tab" href="#!user">Users</a></li>
-			<li class="nav-item"><a class="nav-link" data-target="#type"
-				data-toggle="tab" href="#!type">Type</a></li>
-		</ul>
-
-		<!-- Tab panes -->
-		<div class="tab-content">
-			<div class="tab-pane container-fluid active">
-				<br />
-				<div ng-view></div>
-			</div>
+	<div ng-controller="mainController" layout="column" ng-cloak>
+		<md-toolbar class="md-theme-indigo">
+		<div class="md-toolbar-tools">
+			<md-button class="md-icon-button" aria-label="Settings"
+				ng-click="toggleLeft()"> <md-icon
+				class="fas fa-bars fa-lg"></md-icon> </md-button>
+			<h2></h2>
+			<span flex></span>
+			<md-button class="md-icon-button" aria-label="Favorite"
+				ng-click="ctrl.showToolbarMenu($event, ctrl.favorite)">
+			<md-icon md-svg-icon="img/icons/favorite.svg"></md-icon> </md-button>
+			<md-button class="md-icon-button" aria-label="More"
+				ng-click="ctrl.showToolbarMenu($event, ctrl.more)"> <md-icon
+				md-svg-icon="img/icons/more_vert.svg"></md-icon> </md-button>
 		</div>
+		</md-toolbar>
+		<section layout="row" flex>
+			<md-sidenav class="md-sidenav-left" md-component-id="left" md-disable-backdrop="" md-whiteframe="3"> 
+				<md-toolbar class="md-accent">
+					<div class="md-toolbar-tools">
+						<h1></h1>
+						<span flex></span>
+						<md-button ng-click="toggleLeft()" class="md-accent"> <i
+							class="fas fa-bars"></i> </md-button>
+					</div>
+				</md-toolbar> 
+				<md-content> 
+					<md-list flex> 
+						<md-list-item class="md-1-line" ng-click="route('/dashboard')">
+							<i layout="column" class="fas fa-database"></i>
+							<div class="md-list-item-text" layout="column">Dashboard</div>
+						</md-list-item> 
+						<md-list-item class="md-1-line" ng-click="route('/asset')">
+							<i layout="column" class="fas fa-database"></i>
+							<div class="md-list-item-text" layout="column">Asset</div>
+						</md-list-item> 
+						<md-list-item class="md-1-line" ng-click="route('/type')">
+							<i layout="column" class="fas fa-database"></i>
+							<div class="md-list-item-text" layout="column">Type</div>
+						</md-list-item> 
+						<md-list-item class="md-1-line" ng-click="route('/field')">
+							<i layout="column" class="fas fa-database"></i>
+							<div class="md-list-item-text" layout="column">Field</div>
+						</md-list-item> 
+					</md-list> 
+				</md-content> 
+			</md-sidenav>
+			<md-content flex layout-padding>
+				<div ng-view></div>
+			</md-content>
+		</section>
 	</div>
 </body>
 </html>

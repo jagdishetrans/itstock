@@ -5,7 +5,7 @@
 				ng-repeat="asset in assetTypeList"
 				ng-click="selectedAssetType($index)">{{asset.type}}
 				<span class="badge badge-primary badge-pill">14</span>
-				<button class="btn btn-sm btn-link" ng-click="add($index)"><i class="fa fa-plus"></i></button>
+				<button class="btn btn-sm btn-success" ng-click="add($index, $event)"><i class="fa fa-plus"></i></button>
 			</li>
 		</ul>
 	</div>

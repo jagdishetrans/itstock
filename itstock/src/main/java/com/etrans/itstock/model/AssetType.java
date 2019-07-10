@@ -1,5 +1,6 @@
 package com.etrans.itstock.model;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
@@ -15,27 +16,36 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 public class AssetType {
 
 	@Id
-	private String type;
+	private String key;
+	private String name;
 	private int category;
 	private List<Field> fields;
+	private boolean hasParent;
+	private boolean hasChild;
+
+	private String createdBy;
+	private LocalDateTime createdOn;
+	private String updatedBy;
+	private LocalDateTime updatedOn;
 
 	public AssetType() {
 
 	}
 
-	public AssetType(String type, int category, List<Field> fields) {
-		super();
-		this.type = type;
-		this.category = category;
-		this.fields = fields;
+	public String getKey() {
+		return key;
 	}
 
-	public String getType() {
-		return type;
+	public void setKey(String key) {
+		this.key = key;
 	}
 
-	public void setType(String type) {
-		this.type = type;
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public int getCategory() {
@@ -52,6 +62,54 @@ public class AssetType {
 
 	public void setFields(List<Field> fields) {
 		this.fields = fields;
+	}
+
+	public boolean isHasParent() {
+		return hasParent;
+	}
+
+	public void setHasParent(boolean hasParent) {
+		this.hasParent = hasParent;
+	}
+
+	public boolean isHasChild() {
+		return hasChild;
+	}
+
+	public void setHasChild(boolean hasChild) {
+		this.hasChild = hasChild;
+	}
+
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	public LocalDateTime getCreatedOn() {
+		return createdOn;
+	}
+
+	public void setCreatedOn(LocalDateTime createdOn) {
+		this.createdOn = createdOn;
+	}
+
+	public String getUpdatedBy() {
+		return updatedBy;
+	}
+
+	public void setUpdatedBy(String updatedBy) {
+		this.updatedBy = updatedBy;
+	}
+
+	public LocalDateTime getUpdatedOn() {
+		return updatedOn;
+	}
+
+	public void setUpdatedOn(LocalDateTime updatedOn) {
+		this.updatedOn = updatedOn;
 	}
 
 }
