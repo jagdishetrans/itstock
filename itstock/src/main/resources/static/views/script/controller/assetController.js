@@ -1,164 +1,30 @@
-app.controller('assetController', function($scope, http, util) {
+app.controller('assetController', function($scope, http) {
 
-	$scope.type = {};
-	$scope.loading = false;
-	$scope.parentAsset = { "tag" : "Select" };
-
+	$scope.assetTypeLabels = [{"key":"c72fda75-4004-4bea-a071-60b37e2467bb","name":"Monitor","category":0,"hasParent":true,"hasChild":false,"createdOn":"2019-07-12T23:14:45.964"},{"key":"ab57febb-513f-4db5-b1ae-4ca85ac6c9b6","name":"Desktop","category":0,"hasParent":false,"hasChild":true,"createdOn":"2019-07-12T23:18:37.138"}]
 	
+	$scope.assetTypeObject = {"c72fda75-4004-4bea-a071-60b37e2467bb":{"key":"c72fda75-4004-4bea-a071-60b37e2467bb","name":"Monitor","category":0,"fields":[{"key":"c3d30ab7-b9dd-43f2-bb67-6053d6ec0bef","name":"Model","type":"text","subType":"single","mandatory":false,"placeholder":"Enter model"},{"key":"1020f2b6-8eda-4e68-a632-10ac170de235","name":"Purchase Date","type":"date","subType":"date","mandatory":true,"placeholder":"Enter Purchase Date"},{"key":"914c0bd2-0b15-4ba4-b291-6f4f59d8e616","name":"Invoice No","type":"text","subType":"single","mandatory":true,"placeholder":"Enter invoice no"},{"key":"4da30fcc-da85-48dc-b607-9f9ed2829af9","name":"Dimension","type":"measurement","subType":"dimension","mandatory":true,"placeholder":"Enter dimension","options":"inch"},{"key":"7f2bbefe-5d41-4e16-9a9d-acf361b72d93","name":"Description","type":"text","subType":"multi","mandatory":false,"placeholder":"Enter description"}],"hasParent":true,"hasChild":false,"createdOn":"2019-07-12T23:14:45.964"},"ab57febb-513f-4db5-b1ae-4ca85ac6c9b6":{"key":"ab57febb-513f-4db5-b1ae-4ca85ac6c9b6","name":"Desktop","category":0,"fields":[{"key":"1020f2b6-8eda-4e68-a632-10ac170de235","name":"Purchase Date","type":"date","subType":"date","mandatory":true,"placeholder":"Enter Purchase Date"},{"key":"914c0bd2-0b15-4ba4-b291-6f4f59d8e616","name":"Invoice No","type":"text","subType":"single","mandatory":true,"placeholder":"Enter invoice no"},{"key":"7f2bbefe-5d41-4e16-9a9d-acf361b72d93","name":"Description","type":"text","subType":"multi","mandatory":false,"placeholder":"Enter description"},{"key":"b2555588-6557-4ea2-ba64-dc60a9f2fbcd","name":"Department","type":"select","subType":"single","defaultValue":2,"mandatory":true,"placeholder":"Select department","options":["RND","CSD","IT","HR"]},{"key":"239b1032-6163-4150-b9bb-08da00c412ab","name":"Location","type":"select","subType":"single","defaultValue":0,"mandatory":true,"placeholder":"Select location","options":["KOLKATA","JAMSHEDPUR","JAJPUR","WEST BOKARO"]}],"hasParent":false,"hasChild":true,"createdOn":"2019-07-12T23:18:37.138"}};
 	
-	$scope.include = 'VIEW';
+	http.getAllAssetType(true,function(response){
+		console.log(response);
+	});
 	
-	getAllAssetType();
-
-	function getAllAssetType() {
-		http.getAllAssetType(function(response) {
-			$scope.assetTypeList = response.data;
-		});
-	}
-
-	$scope.getAssets = function() {
-		if ($scope.assets === undefined || $scope.assets.length === 0) {
-			http.getAssetsForChild(function(response) {
-				$scope.assets = response.data;
-			});
-		}
-	};
-
-	$scope.edit = function(index){
-		$scope.include = 'FORM';
-		let asset = $scope.assets[index];
-		console.log(asset);
-		for(let i in $scope.assetTypeList){
-			if($scope.assetTypeList[i].type === asset.type){
-				var assetType = $scope.assetTypeList[i];
-				assetType.tag = asset.tag;
-				for(let x in asset.fields){
-					if(assetType.fields[x].name === asset.fields[x].name){
-						assetType.fields[x].value = asset.fields[x].value;
-					}else{
-						for(let n in assetType.fields){
-							if(assetType.fields[n].name === asset.fields[x].name){
-								assetType.fields[n].value = asset.fields[x].value;
-								break;
-							}
-						}
-					}
-				}
-				$scope.type.data = assetType;
-				console.log(assetType);
-				
-				
-				
-				break;
-			}
-		}
-	}
+	http.getAssetType("", function(response){
+		console.log(response);
+	});
 	
-	$scope.add = function(index, event){
-		event.stopPropagation();
-		$scope.include = 'FORM';
-		
-		var assetType = $scope.assetTypeList[index];
-		$scope.type.data = assetType;
-		
-		http.getAssetTypeCount(assetType.type, function(response){
-			generateId(response.data);
-		});
-		
-	}
-	
-	$scope.save = function() {
-		$scope.loading = true;
-		console.log($scope.type.data);
-		let saveObject = {};
-		saveObject["type"] = $scope.type.data.type;
-		saveObject["category"] = $scope.type.data.category;
-		saveObject["tag"] = $scope.type.data.tag;
-		saveObject["fields"] = [];
-		saveObject["child"] = [];
-		saveObject["parent"] = null;
-		
-		for ( let index in $scope.type.data.fields) {
-			let object = $scope.type.data.fields[index];
-			let fieldObject = {};
-			fieldObject["name"] = object.name;
-			fieldObject["value"] = object.value;
-			saveObject.fields.push(fieldObject);
-		}
-
-		if($scope.childAssetSelectShow){
-			for(let index in $scope.assets){
-				let asset = $scope.assets[index];
-				if(asset.checked){
-					saveObject.child.push(asset.id);
-				}
-			}
-		}
-		
-		if($scope.parentAssetSelectShow){
-			if($scope.parentAsset.tag !== "Select"){
-				saveObject["parent"] = $scope.parentAsset.id;
-			}
-		}
-		
-		console.log(saveObject);
-		http.saveAsset(saveObject, function(response) {
-			console.log(response);
-			if (response.state === 201) {
-				for ( let index in $scope.type.data.fields) {
-					let object = $scope.type.data.fields[index].value = null;
-				}
-			}
-			$scope.loading = false;
-		});
-	}
-
-	$scope.assetTypeData = [];
-
-	$scope.selectedAssetType = function(index){
-		$scope.include = 'VIEW';
-		var assetType = $scope.assetTypeList[index];
-		http.getAssetsByType(assetType.type ,function(response){
-			//console.log(response.data);
-			$scope.assets = response.data;
-			//$scope.type.data = response.data;
-		});
-	};
-	
-//	$scope.selectedAssetType = function(index) {
-//		var assetType = $scope.assetTypeList[index];
-//		$scope.type.data = assetType;
-//		
-//		http.getAssetTypeCount(assetType.type, function(response){
-//			generateId(response.data);
-//		});
-//	};
-
-	$scope.selectParentAsset = function(index){
-		if(index == -1){
-			$scope.parentAsset = { "tag" : "Select" };
-		}else{
-			$scope.parentAsset = $scope.assets[index];
-		}
-	};
-	
-	$scope.showAssetDetails = function(index){
-		if(index == -1){
-			$scope.showAsset = $scope.parentAsset;
-		}else{
-			$scope.showAsset = $scope.assets[index];
-		}
-		$("#assetModal").modal('show');
-	};
-	
-	$scope.removeChildAssetSelection = function(index){
-		$scope.assets[index].checked = false;
-	}
-	
-	function generateId(max) {
-		max = util.padLeft(max+1, '0', 4);
-		$scope.type.data.tag = `eTrans/IT/${$scope.type.data.type}/${max}`;
-	}
-
+	 $scope.showSelectedType =function(index, type){
+	    	if ($scope.selectedIndex === null) {
+	    	      $scope.selectedIndex = index;
+		    }
+		    else if ($scope.selectedIndex === index) {
+		      $scope.selectedIndex = null;
+		    }
+		    else {
+		      $scope.selectedIndex = index;
+		    }
+	    	
+	    	$scope.selectedAssetType = $scope.assetTypeObject[type.key];
+	    	console.log($scope.selectedAssetType);
+	  };
 	
 });

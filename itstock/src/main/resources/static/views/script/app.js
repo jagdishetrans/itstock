@@ -16,12 +16,12 @@ app.controller('mainController', function($scope, $mdSidenav, $location){
 });
 app.config(function($routeProvider) {
 	$routeProvider.when("/", {
-		templateUrl : "../views/field.html",
-		controller : "fieldController"
+		templateUrl : "../views/asset.html",
+		controller : "assetController"
 	}).when("/user", {
 		templateUrl : "users.html"
 	}).when("/asset", {
-		templateUrl : "asset.html",
+		templateUrl : "../views/asset.html",
 		controller : "assetController"
 	}).when("/type", {
 		templateUrl : "../views/type.html",
@@ -73,6 +73,18 @@ app.service('http', function($http) {
 	
 	this.getFields = function(callback){
 		request("http://localhost:8080/fields", METHOD.GET, null, null, function(response){
+			callback(response);
+		});
+	};
+	
+	this.getAllAssetType = function(onlylabel, callback){
+		request("http://localhost:8080/assettype", METHOD.GET, {"onlylabel":onlylabel}, null, function(response){
+			callback(response);
+		})
+	};
+	
+	this.getAssetType = function(assetTypeKey, callback){
+		request(`http://localhost:8080/assettype/${assetTypeKey}`, METHOD.GET, null, null, function(response){
 			callback(response);
 		});
 	};
