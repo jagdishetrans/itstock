@@ -1,16 +1,51 @@
-<div class="row">
-	<div class="col-sm-3">
-		<ul class="list-group">
-			<li class="list-group-item  d-flex justify-content-between align-items-center" data-toggle="tab"
-				ng-repeat="asset in assetTypeList"
-				ng-click="selectedAssetType($index)">{{asset.type}}
-				<span class="badge badge-primary badge-pill">14</span>
-				<button class="btn btn-sm btn-success" ng-click="add($index, $event)"><i class="fa fa-plus"></i></button>
-			</li>
-		</ul>
-	</div>
-	<div class="col-sm-9">
-		<div ng-if="include == 'FORM'" ng-include="'../views/assetform.html'"></div>
-		<div ng-if="include == 'VIEW'" ng-include="'../views/assetview.html'"></div>
-	</div>
+<div layout="column" flex>
+	<md-tabs md-dynamic-height md-right-tabs>
+		<md-tab label="CREATE"> 
+				<md-content class="md-padding" flex layout="row">
+					<div flex="25" class="md-whiteframe-1dp" style="margin-right:5px;height:480px;">
+						<md-list class="md-dense" flex>
+							<md-list-item class="md-1-line" ng-repeat="type in assetTypeLabels" ng-click="showSelectedType($index, type)" ng-class="{selectedListItem: selectedIndex === $index}">
+								<div class="md-list-item-text" flex layout="column">
+									<p style="font-size:12px;line-height:18px;">{{ type.name }}<br style="padding:0;margin:0;" />({{type.key}})</p>
+								</div>
+								<md-divider  ng-if = "!$last"></md-divider>
+							</md-list-item>
+						</md-list>
+					</div>
+					<div layout="column" flex="75" class="md-whiteframe-1dp" style="margin-left:5px;height:480px;">
+						<md-toolbar class="md-accent">
+					        <div class="md-toolbar-tools">
+					          <md-truncate flex>
+					            {{selectedAssetType.name}}
+					          </md-truncate>
+							  <md-input-container style="font-size:12px;margin:24px 0px 0px 0px;" class="md-block" flex>
+					            <label style="color:#fff;">TAG</label>
+					            <input style="color:#fff;" type="text" value="eTrans/IT/MONITOR/001">
+					          </md-input-container>        
+					        </div>
+					      </md-toolbar>
+					       <md-content  style="height: 380px;">
+							<md-list class="md-dense" style="margin-top:5px;"" flex>
+								<md-list-item class="md-1-line assetEntryList" ng-repeat="field in selectedAssetType.fields">
+									<md-input-container class="md-block" flex>
+							            <label>{{field.name}}</label>
+							            <input type="text">
+							          </md-input-container>
+									<!-- <md-divider  ng-if = "!$last"></md-divider> -->
+								</md-list-item>
+							</md-list>
+						</md-content>
+						<div layout="row">
+							<div flex></div>
+							<div><md-button class="md-primary md-raised"><i class="fa fa-save"></i> SAVE</md-button></div>
+						</div>
+					</div>
+				</md-content>
+		</md-tab>
+		<md-tab label="VIEW"> 
+				<md-content class="md-padding" flex layout="column">
+					
+				</md-content>
+		</md-tab>
+	</md-tabs>
 </div>
